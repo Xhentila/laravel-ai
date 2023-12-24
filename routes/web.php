@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\AI\Chat;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,17 +14,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    Illuminate\Support\Facades\Http::post('https://api.openai.com/v1/chat/completions', [
-        "model"=> "gpt-3.5-turbo",
-        "messages"=> [
-            [
-                "role"=> "system",
-                "content"=> "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."
-            ],
-            [
-                "role"=>"user",
-                "content"=> "Compose a poem that explains the concept of recursion in programming."
-            ]
-        ]
-    ]);
+
+     $poem = (new Chat)
+         ->systemMessage('You are a poetic assistant, skilled in explaining complex programming concepts with creative flair.')
+         ->send('Compose a poem that explains the concept of recursion in programming');
+
+return view('welcome', ['poem' => $poem]);
 });
