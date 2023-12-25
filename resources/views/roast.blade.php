@@ -16,7 +16,14 @@
         </style>
     </head>
     <body class="antialiased">
-    hello
-        {{$poem}}
+    @if (section('file'))
+        <a href="{{ asset(sessin('file')) }}" download >Download Audio ></a>
+        @else
+    <form action="/roast" method="POST" class="full lg:max-">
+        @csrf
+        <input type="text" name="topic" placeholder="What do you want to Roast?" required class="border p-2 rounded"/>
+        <button type="button" class="orunded p-2">Roast</button>
+    </form>
+    @endif
     </body>
 </html>

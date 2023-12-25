@@ -14,7 +14,7 @@ class Chat
     /**
      * @return array
      */
-    public function send(string $message)
+    public function send(string $message, bool $speech = false): ?string
     {
         $this->messages[] = [
             'role' => 'assistant',
@@ -33,9 +33,17 @@ class Chat
             'content' => $response
         ];
 
-        return $response;
+        return $speech ? $this->speech($response) : $response;
     }
 
+    public function speech($message)
+    {
+         return OpenAI::audio()->speech([
+            'model'=> 'tts-1',
+            'inout'=>$message,
+            'voice'=> 'alloy',
+        ]);
+    }
     public function reply($message): array
     {
         return $this->send($message);
