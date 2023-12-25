@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\AI\Chat;
+use OpenAI\Laravel\Facades\OpenAI;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,8 +24,20 @@ return view('welcome', ['poem' => $poem]);
 });*/
 
 Route::get('/', function () {
-    session(['file' => 'asfsdfasr.mp3']);
-    return view('roast');
+
+    return view('image',['messages'=>session('messages', [])]);
+});
+
+Route::post('/image', function () {
+    $attributes = request()->validate([
+        'description ' => ['required', 'string', 'min:2']
+    ]);
+
+    $chat = new Chat(session('message', []));
+    $url = $chat->visualize($attributes['description']);
+
+    session('messages', $url['description']);
+    return redirect('/')->with(['url'=>$url]);
 });
 
 Route::post('/roast', function () {
